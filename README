@@ -25,7 +25,7 @@ class SuperCoolService < ServiceProxy
   def build_cool1(options)
     # This will generate a simple SOAP envelope. Using the xml block local, you 
     # can inject XML into the body of the envelope.
-    build_envelope(options) do |xml|
+    soap_envelope(options) do |xml|
     end
   end
   
