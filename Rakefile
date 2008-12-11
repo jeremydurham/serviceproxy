@@ -12,7 +12,6 @@ HOMEPAGE = ""
 SUMMARY = "Lightweight SOAP library for Ruby"
 
 # Used by release task
-RUBY_FORGE_PROJECT  = "templater"
 GEM_NAME            = NAME
 PROJECT_URL         = HOMEPAGE
 PROJECT_SUMMARY     = SUMMARY

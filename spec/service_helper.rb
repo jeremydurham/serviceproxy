@@ -34,5 +34,9 @@ class ISBNService < ServiceProxy
   end
 end
 
-class DigitalEncryptionService < ServiceProxy
+class SHAGeneratorService < ServiceProxy
+  
+  def parse_gen_ssha(response)
+    response
+  end
 end

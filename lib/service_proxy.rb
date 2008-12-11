@@ -22,7 +22,7 @@ protected
     self.service_methods = []
     setup_http
     get_wsdl
-    parse_wsdl    
+    parse_wsdl
     setup_namespace
   end
   
@@ -59,11 +59,19 @@ private
   def call_service(options)
     method   = options[:method]
     headers  = { 'content-type' => 'text/xml; charset=utf-8', 'SOAPAction' => self.soap_actions[method] }
-    builder  = underscore("build_#{method}")
+    body     = build_envelope(method, options)
+    response = self.http.request_post(self.uri.path, body, headers)    
+    parse_response(method, response)
+  end
+  
+  def build_envelope(method, options)
+    builder  = underscore("build_#{method}")    
+    self.respond_to?(builder) ? self.send(builder, options).target! : soap_envelope(options).target!
+  end
+  
+  def parse_response(method, response)
     parser   = underscore("parse_#{method}")
-    body     = respond_to?(builder) ? self.send(builder, options).target! : soap_envelope(options).target!
-    response = self.http.request_post(self.uri.path, body, headers)
-    result   = self.send(parser, response)
+    self.respond_to?(parser) ? self.send(parser, response) : raise(NoMethodError, "You must define the parse method: #{parser}")
   end
   
   def soap_envelope(options, &block)
@@ -82,10 +90,9 @@ private
   end
   
   def method_missing(method, *args)
-    method = method.to_s
     options = args.pop || {}
-    super unless self.service_methods.include?(method)
-    call_service(options.update(:method => method))
+    super unless self.service_methods.include?(method.to_s)
+    call_service(options.update(:method => method.to_s))
   end
   
   def underscore(camel_cased_word)

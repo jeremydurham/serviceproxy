@@ -48,9 +48,18 @@ describe ServiceProxy do
     end
   end
   
-  describe "connecting to a Digital Encryption Service" do
+  describe "connecting to the SHA hash generator Service" do
     before do
-      @proxy = DigitalEncryptionService.new('https://labs.safelayer.com/demo/wsdl/DigitalEncryption.wsdl')
+      @proxy = SHAGeneratorService.new('https://sec.neurofuzz-software.com/paos/genSSHA-SOAP.php?wsdl')
+      @proxy.debug = true
+    end
+    
+    it "should be SSL" do
+      @proxy.http.use_ssl.should be_true
+    end
+    
+    it "should generate a SSH hash" do
+      result = @proxy.genSSHA
     end
   end
 end
