@@ -59,7 +59,8 @@ describe ServiceProxy do
     end
     
     it "should generate a SSH hash" do
-      result = @proxy.genSSHA
+      result = @proxy.genSSHA(:text => 'hello world', :hash_type => 'sha512')
+      result.should =~ /^[{SSHA512}]/
     end
   end
 end

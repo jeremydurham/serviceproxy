@@ -59,18 +59,18 @@ private
   def call_service(options)
     method   = options[:method]
     headers  = { 'content-type' => 'text/xml; charset=utf-8', 'SOAPAction' => self.soap_actions[method] }
-    body     = build_envelope(method, options)
+    body     = build_request(method, options)
     response = self.http.request_post(self.uri.path, body, headers)    
     parse_response(method, response)
   end
   
-  def build_envelope(method, options)
+  def build_request(method, options)
     builder  = underscore("build_#{method}")    
     self.respond_to?(builder) ? self.send(builder, options).target! : soap_envelope(options).target!
   end
   
   def parse_response(method, response)
-    parser   = underscore("parse_#{method}")
+    parser = underscore("parse_#{method}")
     self.respond_to?(parser) ? self.send(parser, response) : 
                                raise(NoMethodError, "You must define the parse method: #{parser}")
   end
