@@ -4,6 +4,14 @@ require File.dirname(__FILE__) + '/../lib/service_proxy.rb'
 require File.dirname(__FILE__) + '/service_helper.rb'
 
 describe ServiceProxy do  
+  it "should raise on an invalid URI" do
+    lambda { ServiceProxy.new('bacon') }.should raise_error(ArgumentError)
+  end
+  
+  it "should raise on invalid WSDL" do
+    lambda { ServiceProxy.new('http://www.jeremydurham.com') }.should raise_error(RuntimeError)
+  end
+  
   describe "connecting to an Instant Message Service" do
     before do
       @proxy = InstantMessageService.new('http://www.imcomponents.com/imsoap/?wsdl')
@@ -19,7 +27,7 @@ describe ServiceProxy do
     describe "calling Login" do
       it "should return nil" do
         result = @proxy.Login(:userId => 'test', :password => 'test')
-        result.should be_nil
+        result.should == 'Invalid username/password'
       end
     end
   end

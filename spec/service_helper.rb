@@ -16,7 +16,7 @@ class InstantMessageService < ServiceProxy
   end
   
   def parse_login(response)
-    'Invalid username/password' if response.code == 500
+    'Invalid username/password' if response.code == "500"
   end
 end
 

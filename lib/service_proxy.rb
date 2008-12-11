@@ -48,6 +48,7 @@ private
       method_list << operation_name
       self.soap_actions[operation_name] = operation.get_attribute('soapAction')
     end
+    raise RuntimeError, "Could not parse WSDL" if method_list.empty?
     self.service_methods = method_list.sort
   end
   
@@ -61,7 +62,7 @@ private
     builder  = underscore("build_#{method}")
     parser   = underscore("parse_#{method}")
     body     = respond_to?(builder) ? self.send(builder, options).target! : soap_envelope(options).target!
-    response = self.http.request_post(self.uri.path, body, headers)    
+    response = self.http.request_post(self.uri.path, body, headers)
     result   = self.send(parser, response)
   end
   
