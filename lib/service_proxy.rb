@@ -71,7 +71,8 @@ private
   
   def parse_response(method, response)
     parser   = underscore("parse_#{method}")
-    self.respond_to?(parser) ? self.send(parser, response) : raise(NoMethodError, "You must define the parse method: #{parser}")
+    self.respond_to?(parser) ? self.send(parser, response) : 
+                               raise(NoMethodError, "You must define the parse method: #{parser}")
   end
   
   def soap_envelope(options, &block)
