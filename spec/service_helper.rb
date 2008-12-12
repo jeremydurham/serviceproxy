@@ -48,3 +48,11 @@ class SHAGeneratorService < ServiceProxy
     xml.at("return").inner_text
   end
 end
+
+class VariantEndpointService < ServiceProxy
+  def endpoint_uri
+    @endpoint_uri ||= URI.parse(self.uri.to_s)
+    @endpoint_uri.path << "?testing=1" unless @endpoint_uri =~ /testing=1/
+    @endpoint_uri
+  end
+end

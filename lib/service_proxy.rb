@@ -60,7 +60,8 @@ private
     method   = options[:method]
     headers  = { 'content-type' => 'text/xml; charset=utf-8', 'SOAPAction' => self.soap_actions[method] }
     body     = build_request(method, options)
-    response = self.http.request_post(self.uri.path, body, headers)    
+    target_uri = self.respond_to?(:endpoint_uri) ? self.endpoint_uri : self.uri
+    response = self.http.request_post(target_uri.path, body, headers)
     parse_response(method, response)
   end
   
