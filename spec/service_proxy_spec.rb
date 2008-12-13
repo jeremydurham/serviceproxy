@@ -51,7 +51,6 @@ describe ServiceProxy do
   describe "connecting to the SHA hash generator Service" do
     before do
       @proxy = SHAGeneratorService.new('https://sec.neurofuzz-software.com/paos/genSSHA-SOAP.php?wsdl')
-      @proxy.debug = true
     end
     
     it "should be SSL" do
