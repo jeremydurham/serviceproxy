@@ -68,7 +68,7 @@ private
   def setup_namespace
     self.target_namespace = self.wsdl.namespaces['xmlns:tns']
   end
-    
+
   def build_request(method, options)
     builder  = underscore("build_#{method}")    
     self.respond_to?(builder) ? self.send(builder, options).target! : soap_envelope(options).target!
@@ -87,7 +87,7 @@ private
     xml = Builder::XmlMarkup.new
     xml.env(:Envelope, 'xmlns:xsd' => xsd, 'xmlns:env' => env, 'xmlns:xsi' => xsi) do
       xml.env(:Body) do
-        xml.n1(options[:method].to_sym, "xmlns:n1" => self.target_namespace) do        
+        xml.__send__(options[:method].to_sym, "xmlns" => self.target_namespace) do        
           yield xml if block_given?
         end
       end
