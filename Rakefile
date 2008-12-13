@@ -5,7 +5,7 @@ require 'rake/rdoctask'
 require 'spec/rake/spectask'
 require File.join(File.dirname(__FILE__), 'lib', 'service_proxy')
 
-NAME = "ServiceProxy"
+NAME = "serviceproxy"
 AUTHOR = "Jeremy Durham"
 EMAIL = "jeremydurham@gmail.com"
 HOMEPAGE = ""
@@ -53,7 +53,7 @@ end
 
 desc "create a gemspec file"
 task :make_spec do
-  File.open("#{GEM}.gemspec", "w") do |file|
+  File.open("#{GEM_NAME}.gemspec", "w") do |file|
     file.puts spec.to_ruby
   end
 end
