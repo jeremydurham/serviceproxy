@@ -7,8 +7,9 @@ require 'uri'
 
 class ServiceProxy
   VERSION = '0.0.1'
+  WSDL_SCHEMA_URL = "http://schemas.xmlsoap.org/wsdl/"
   
-  attr_accessor :endpoint, :service_methods, :soap_actions, :service_uri, :http, :uri, :debug, :wsdl, :target_namespace
+  attr_accessor :endpoint, :service_methods, :soap_actions, :service_uri, :http, :service_http, :uri, :debug, :wsdl, :target_namespace, :service_ports, :default_port
 
   def initialize(endpoint)
     self.endpoint = endpoint
@@ -50,6 +51,15 @@ private
     end
     raise RuntimeError, "Could not parse WSDL" if method_list.empty?
     self.service_methods = method_list.sort
+    
+    port_list = {}
+    self.wsdl.search('//wsdl:port', {"xmlns:wsdl" => WSDL_SCHEMA_URL}).each do |port|
+      name = underscore(port['name'])
+      self.default_port ||= name
+      location = port.search('./*[@location]').first['location']
+      port_list[name] = location
+    end
+    self.service_ports = port_list
   end
   
   def setup_namespace
@@ -60,8 +70,18 @@ private
     method   = options[:method]
     headers  = { 'content-type' => 'text/xml; charset=utf-8', 'SOAPAction' => self.soap_actions[method] }
     body     = build_request(method, options)
-    target_uri = self.respond_to?(:endpoint_uri) ? self.endpoint_uri : self.uri
-    response = self.http.request_post(target_uri.path, body, headers)
+    
+    target_uri = service_port
+    self.service_http ||= if target_uri.host != self.uri.host || target_uri.port != self.uri.port
+      http = Net::HTTP.new(target_uri.host, target_uri.port)
+      http.use_ssl = true if target_uri.scheme == 'https'                                                                            
+      http.set_debug_output(STDOUT) if self.debug
+      http
+    else
+      self.http
+    end
+    
+    response = self.service_http.request_post(target_uri.path, body, headers)
     parse_response(method, response)
   end
   
@@ -91,10 +111,21 @@ private
     xml
   end
   
+  def service_port
+    port_name = self.default_port
+    self.__send__("#{port_name}_uri")
+  end
+  
   def method_missing(method, *args)
-    options = args.pop || {}
-    super unless self.service_methods.include?(method.to_s)
-    call_service(options.update(:method => method.to_s))
+    method_name = method.to_s
+    case method_name
+    when /_uri$/
+      URI.parse(self.service_ports[method_name.gsub(/_uri$/, '')])
+    else
+      options = args.pop || {}
+      super unless self.service_methods.include?(method_name)
+      call_service(options.update(:method => method_name))
+    end
   end
   
   def underscore(camel_cased_word)

@@ -62,27 +62,5 @@ describe ServiceProxy do
       result = @proxy.genSSHA(:text => 'hello world', :hash_type => 'sha512')
       result.should =~ /^[{SSHA512}]/
     end
-  end
-  
-  describe "with varying endpoint uris" do
-    before do
-      @proxy = VariantEndpointService.new('http://www.imcomponents.com/imsoap/?wsdl')
-    end
-    
-    it "should respond to endpoint_uri" do
-      @proxy.should respond_to(:endpoint_uri)
-    end
-    
-    it "should return an object that responds to path" do
-      @proxy.endpoint_uri.should respond_to(:path)
-    end
-    
-    it "should not be the same object as uri" do
-      @proxy.endpoint_uri.object_id.should_not == @proxy.uri.object_id
-    end
-    
-    it "should change the endpoint path" do
-      @proxy.endpoint_uri.path.should_not == @proxy.uri.path
-    end
-  end
+  end  
 end
