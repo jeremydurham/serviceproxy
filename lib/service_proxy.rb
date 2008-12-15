@@ -66,7 +66,7 @@ private
     self.service_methods = method_list.sort
     
     port_list = {}
-    self.wsdl.xpath('//*[name()="wsdl:port"]', {"xmlns:wsdl" => WSDL_SCHEMA_URL}).each do |port|
+    self.wsdl.xpath('//wsdl:port', {"xmlns:wsdl" => WSDL_SCHEMA_URL}).each do |port|
       name = underscore(port['name'])
       self.default_port ||= name
       location = port.xpath('./*[@location]').first['location']
