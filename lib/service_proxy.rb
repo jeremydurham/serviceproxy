@@ -15,6 +15,14 @@ class ServiceProxy
     self.endpoint = endpoint
     self.setup
   end
+  
+  def call_service(options)
+    method   = options[:method]
+    headers  = { 'content-type' => 'text/xml; charset=utf-8', 'SOAPAction' => self.soap_actions[method] }
+    body     = build_request(method, options)
+    response = self.http.request_post(self.uri.path, body, headers)    
+    parse_response(method, response)
+  end  
 
 protected
 
@@ -33,8 +41,13 @@ private
     self.uri = URI.parse(self.endpoint)
     raise ArgumentError, "Endpoint URI must be valid" unless self.uri.scheme
     self.http = Net::HTTP.new(self.uri.host, self.uri.port)
-    self.http.use_ssl = true if self.uri.scheme == 'https'                                                                            
+    setup_https if self.uri.scheme == 'https'
     self.http.set_debug_output(STDOUT) if self.debug
+  end
+
+  def setup_https
+    self.http.use_ssl = true
+    self.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
   end
   
   def get_wsdl
@@ -65,26 +78,7 @@ private
   def setup_namespace
     self.target_namespace = self.wsdl.namespaces['xmlns:tns']
   end
-  
-  def call_service(options)
-    method   = options[:method]
-    headers  = { 'content-type' => 'text/xml; charset=utf-8', 'SOAPAction' => self.soap_actions[method] }
-    body     = build_request(method, options)
-    
-    target_uri = service_port
-    self.service_http ||= if target_uri.host != self.uri.host || target_uri.port != self.uri.port
-      http = Net::HTTP.new(target_uri.host, target_uri.port)
-      http.use_ssl = true if target_uri.scheme == 'https'                                                                            
-      http.set_debug_output(STDOUT) if self.debug
-      http
-    else
-      self.http
-    end
-    
-    response = self.service_http.request_post(target_uri.path, body, headers)
-    parse_response(method, response)
-  end
-  
+
   def build_request(method, options)
     builder  = underscore("build_#{method}")    
     self.respond_to?(builder) ? self.send(builder, options).target! : soap_envelope(options).target!

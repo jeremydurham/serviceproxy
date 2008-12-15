@@ -26,12 +26,16 @@ class SuperCoolService < ServiceProxy
     # This will generate a simple SOAP envelope. Using the xml block local, you 
     # can inject XML into the body of the envelope.
     soap_envelope(options) do |xml|
+      # your XML here
     end
   end
   
   def parse_cool1(response)
     # The response parameter is a simple Net::HTTP response
-    response.body
+    # here, we use Hpricot to parse it, but you could use
+    # Nokogiri, REXML, etc
+    xml = Hpricot.XML(response.body)
+    xml.at("cool1Result").inner_text
   end
 end
 
@@ -39,6 +43,3 @@ Next, you can attempt to call the service:
 
 service = SuperCoolService.new(url_to_wsdl)
 service.cool1
-
-The response of this call will be an XML document. Typically, you can
-use Hpricot, Nokogiri, or your preferred library to parse the response. No magic.
