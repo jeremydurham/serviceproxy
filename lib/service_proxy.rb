@@ -131,7 +131,9 @@ private
     method_name = method.to_s
     case method_name
     when /_uri$/
-      URI.parse(self.service_ports[method_name.gsub(/_uri$/, '')])
+      sp_name = method_name.gsub(/_uri$/, '')
+      super unless self.service_ports.has_key?(sp_name)
+      URI.parse(self.service_ports[sp_name])
     else
       options = args.pop || {}
       super unless self.service_methods.include?(method_name)
