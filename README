@@ -2,6 +2,11 @@ ServiceProxy
 
 ServiceProxy is a lightweight SOAP library for Ruby. 
 
+Credits
+
+The idea and prototype for this library was originally developed by
+Luke Stark (http://www.starkaudio.com)
+
 How it works
 
 Unlike SOAP4R, this library takes a very different approach to building 
@@ -43,3 +48,7 @@ Next, you can attempt to call the service:
 
 service = SuperCoolService.new(url_to_wsdl)
 service.cool1
+
+CONTRIBUTORS
+
+Rich Cavanaugh

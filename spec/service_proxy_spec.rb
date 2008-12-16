@@ -9,7 +9,7 @@ describe ServiceProxy do
   end
   
   it "should raise on invalid WSDL" do
-    lambda { ServiceProxy.new('http://www.jeremydurham.com') }.should raise_error(RuntimeError)
+    lambda { ServiceProxy.new('http://www.yahoo.com') }.should raise_error(RuntimeError)
   end
     
   describe "connecting to an Instant Message Service" do
