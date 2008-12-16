@@ -35,7 +35,7 @@ class ISBNService < ServiceProxy
   
   def service_port
     local_uri = URI.parse(self.isbn_service_soap_uri.to_s)
-    local_uri.query = "dummy=1"
+    local_uri.path << "?dummy=1"
     local_uri
   end
 end
