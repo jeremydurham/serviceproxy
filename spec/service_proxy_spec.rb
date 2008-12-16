@@ -69,7 +69,7 @@ describe ServiceProxy do
     end
     
     it "should have the dummy query argument" do
-      @proxy.send(:service_uri).path.should match(/\?dummy=1/)
+      @proxy.send(:service_uri).to_s.should match(/\?dummy=1/)
     end
   end
 end
