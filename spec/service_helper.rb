@@ -32,6 +32,12 @@ class ISBNService < ServiceProxy
     xml = Hpricot.XML(response.body)
     xml.at("m:IsValidISBN13Result").inner_text == 'true' ? true : false
   end
+  
+  def service_port
+    local_uri = URI.parse(self.isbn_service_soap_uri.to_s)
+    local_uri.path << "?dummy=1"
+    local_uri
+  end
 end
 
 class SHAGeneratorService < ServiceProxy

@@ -62,4 +62,14 @@ describe ServiceProxy do
       result.should =~ /^[{SSHA512}]/
     end
   end
+  
+  describe "using the #service_port hook" do
+    before do
+      @proxy = ISBNService.new('http://webservices.daehosting.com/services/isbnservice.wso?WSDL')
+    end
+    
+    it "should have the dummy query argument" do
+      @proxy.send(:service_uri).path.should match(/\?dummy=1/)
+    end
+  end
 end

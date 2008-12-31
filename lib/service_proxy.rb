@@ -7,8 +7,9 @@ require 'uri'
 
 class ServiceProxy
   VERSION = '0.0.1'
+  WSDL_SCHEMA_URL = "http://schemas.xmlsoap.org/wsdl/"
   
-  attr_accessor :endpoint, :service_methods, :soap_actions, :service_uri, :http, :uri, :debug, :wsdl, :target_namespace
+  attr_accessor :endpoint, :service_methods, :soap_actions, :service_uri, :http, :service_http, :uri, :debug, :wsdl, :target_namespace, :service_ports
 
   def initialize(endpoint)
     self.endpoint = endpoint
@@ -19,7 +20,7 @@ class ServiceProxy
     method   = options[:method]
     headers  = { 'content-type' => 'text/xml; charset=utf-8', 'SOAPAction' => self.soap_actions[method] }
     body     = build_request(method, options)
-    response = self.http.request_post(self.uri.path, body, headers)    
+    response = self.service_http.request_post(self.service_uri.path, body, headers)    
     parse_response(method, response)
   end  
 
@@ -28,27 +29,50 @@ protected
   def setup
     self.soap_actions = {}
     self.service_methods = []
-    setup_http
+    setup_uri
+    self.http = setup_http(self.uri)
     get_wsdl
     parse_wsdl
     setup_namespace
   end
   
-private
+  def service_uri
+    @service_uri ||= if self.respond_to?(:service_port)
+      self.service_port
+    else
+      self.uri
+    end
+  end
   
-  def setup_http
-    self.uri = URI.parse(self.endpoint)
-    raise ArgumentError, "Endpoint URI must be valid" unless self.uri.scheme
-    self.http = Net::HTTP.new(self.uri.host, self.uri.port)
-    setup_https if self.uri.scheme == 'https'
-    self.http.set_debug_output(STDOUT) if self.debug
+  def service_http
+    @service_http ||= unless self.service_uri == self.uri
+      local_http = self.setup_http(self.service_uri)
+      setup_https(local_http) if self.service_uri.scheme == 'https'
+      local_http
+    else
+      self.http
+    end
+  end
+  
+  def setup_http(local_uri)
+    raise ArgumentError, "Endpoint URI must be valid" unless local_uri.scheme
+    local_http = Net::HTTP.new(local_uri.host, local_uri.port)
+    setup_https(local_http) if local_uri.scheme == 'https'
+    local_http.set_debug_output(STDOUT) if self.debug
+    local_http
   end
 
-  def setup_https
-    self.http.use_ssl = true
-    self.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  def setup_https(local_http)
+    local_http.use_ssl = true
+    local_http.verify_mode = OpenSSL::SSL::VERIFY_NONE
   end
   
+private
+  
+  def setup_uri
+    self.uri = URI.parse(self.endpoint)
+  end
+    
   def get_wsdl
     response = self.http.get("#{self.uri.path}?#{self.uri.query}")
     self.wsdl = Nokogiri.XML(response.body)    
@@ -63,6 +87,14 @@ private
     end
     raise RuntimeError, "Could not parse WSDL" if method_list.empty?
     self.service_methods = method_list.sort
+    
+    port_list = {}
+    self.wsdl.xpath('//wsdl:port', {"xmlns:wsdl" => WSDL_SCHEMA_URL}).each do |port|
+      name = underscore(port['name'])
+      location = port.xpath('./*[@location]').first['location']
+      port_list[name] = location
+    end
+    self.service_ports = port_list
   end
   
   def setup_namespace
@@ -94,11 +126,19 @@ private
     end
     xml
   end
-  
+      
   def method_missing(method, *args)
-    options = args.pop || {}
-    super unless self.service_methods.include?(method.to_s)
-    call_service(options.update(:method => method.to_s))
+    method_name = method.to_s
+    case method_name
+    when /_uri$/
+      sp_name = method_name.gsub(/_uri$/, '')
+      super unless self.service_ports.has_key?(sp_name)
+      URI.parse(self.service_ports[sp_name])
+    else
+      options = args.pop || {}
+      super unless self.service_methods.include?(method_name)
+      call_service(options.update(:method => method_name))
+    end
   end
   
   def underscore(camel_cased_word)
