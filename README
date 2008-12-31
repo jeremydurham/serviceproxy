@@ -4,6 +4,13 @@ ServiceProxy is a lightweight SOAP library for Ruby.
 
 How it works
 
+Loading the library:
+
+require 'rubygems'
+require 'service_proxy'
+
+Using the library:
+
 Unlike SOAP4R, this library takes a very different approach to building 
 requests and parsing responses. There is little magic and no code 
 generation with this library. 
