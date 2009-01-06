@@ -103,7 +103,8 @@ private
 
   def build_request(method, options)
     builder  = underscore("build_#{method}")    
-    self.respond_to?(builder) ? self.send(builder, options).target! : soap_envelope(options).target!
+    self.respond_to?(builder) ? self.send(builder, options).target! : 
+                                soap_envelope(options).target!
   end
   
   def parse_response(method, response)

@@ -54,3 +54,14 @@ class SHAGeneratorService < ServiceProxy
     xml.at("return").inner_text
   end
 end
+
+class InvalidSHAGeneratorService < ServiceProxy
+  
+  def build_gen_ssha(options)
+    soap_envelope(options) do |xml|
+      xml.text(options[:text])
+      xml.hashtype(options[:hash_type])
+    end
+  end
+  
+end

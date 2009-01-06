@@ -63,6 +63,16 @@ describe ServiceProxy do
     end
   end
   
+  describe "making a service call without a parse method" do
+    before do
+      @proxy = InvalidSHAGeneratorService.new('https://sec.neurofuzz-software.com/paos/genSSHA-SOAP.php?wsdl')
+    end
+  
+    it "should raise a no method error" do
+      lambda { result = @proxy.genSSHA(:text => 'hello world', :hash_type => 'sha512') }.should raise_error(NoMethodError)
+    end
+  end
+  
   describe "using the #service_port hook" do
     before do
       @proxy = ISBNService.new('http://webservices.daehosting.com/services/isbnservice.wso?WSDL')
