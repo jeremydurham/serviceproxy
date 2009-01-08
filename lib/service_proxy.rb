@@ -7,7 +7,6 @@ require 'uri'
 
 class ServiceProxy
   VERSION = '0.0.1'
-  WSDL_SCHEMA_URL = "http://schemas.xmlsoap.org/wsdl/"
   
   attr_accessor :endpoint, :service_methods, :soap_actions, :service_uri, :http, :service_http, :uri, :debug, :wsdl, :target_namespace, :service_ports
 
@@ -55,10 +54,11 @@ protected
   end
   
   def setup_http(local_uri)
-    raise ArgumentError, "Endpoint URI must be valid" unless local_uri.scheme
+    raise ArgumentError, "Endpoint URI must be valid" unless local_uri.scheme    
     local_http = Net::HTTP.new(local_uri.host, local_uri.port)
     setup_https(local_http) if local_uri.scheme == 'https'
     local_http.set_debug_output(STDOUT) if self.debug
+    local_http.read_timeout = 5
     local_http
   end
 
@@ -89,7 +89,7 @@ private
     self.service_methods = method_list.sort
     
     port_list = {}
-    self.wsdl.xpath('//wsdl:port', {"xmlns:wsdl" => WSDL_SCHEMA_URL}).each do |port|
+    self.wsdl.xpath('//wsdl:port', {"xmlns:wsdl" => 'http://schemas.xmlsoap.org/wsdl/'}).each do |port|
       name = underscore(port['name'])
       location = port.xpath('./*[@location]').first['location']
       port_list[name] = location
