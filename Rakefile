@@ -18,7 +18,7 @@ PROJECT_SUMMARY     = SUMMARY
 PROJECT_DESCRIPTION = SUMMARY
 
 PKG_BUILD    = ENV['PKG_BUILD'] ? '.' + ENV['PKG_BUILD'] : ''
-GEM_VERSION  = ServiceProxy::VERSION + PKG_BUILD
+GEM_VERSION  = ServiceProxy::Base::VERSION + PKG_BUILD
 RELEASE_NAME = "REL #{GEM_VERSION}"
 #
 # ==== Gemspec and installation
@@ -26,7 +26,7 @@ RELEASE_NAME = "REL #{GEM_VERSION}"
 
 spec = Gem::Specification.new do |s|
   s.name = NAME
-  s.version = ServiceProxy::VERSION
+  s.version = ServiceProxy::Base::VERSION
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
   s.extra_rdoc_files = ["README", "LICENSE"]
@@ -36,10 +36,12 @@ spec = Gem::Specification.new do |s|
   s.email = EMAIL
   s.homepage = HOMEPAGE
   s.require_path = 'lib'
+  s.executables          = ['wsdl2proxy']
   s.files = %w(LICENSE README Rakefile) + Dir.glob("{lib,spec}/**/*")
   
   s.add_dependency "nokogiri"
   s.add_dependency "hpricot"
+  s.add_dependency "thor"
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
@@ -48,7 +50,7 @@ end
 
 desc "install the gem locally"
 task :install => [:clean, :package] do
-  sh %{sudo gem install pkg/#{NAME}-#{ServiceProxy::VERSION} --no-update-sources}
+  sh %{sudo gem install pkg/#{NAME}-#{ServiceProxy::Base::VERSION} --no-update-sources}
 end
 
 desc "create a gemspec file"

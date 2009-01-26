@@ -1,7 +1,7 @@
 require 'hpricot'
 
 # Service Endpoints
-class InstantMessageService < ServiceProxy
+class InstantMessageService < ServiceProxy::Base
   
   def parse_get_version(response)
     xml = Hpricot.XML(response.body)
@@ -20,7 +20,7 @@ class InstantMessageService < ServiceProxy
   end
 end
 
-class ISBNService < ServiceProxy  
+class ISBNService < ServiceProxy::Base  
   
   def build_is_valid_isbn13(options)
     soap_envelope(options) do |xml|
@@ -40,7 +40,7 @@ class ISBNService < ServiceProxy
   end
 end
 
-class SHAGeneratorService < ServiceProxy
+class SHAGeneratorService < ServiceProxy::Base
   
   def build_gen_ssha(options)
     soap_envelope(options) do |xml|
@@ -55,7 +55,7 @@ class SHAGeneratorService < ServiceProxy
   end
 end
 
-class InvalidSHAGeneratorService < ServiceProxy
+class InvalidSHAGeneratorService < ServiceProxy::Base
   
   def build_gen_ssha(options)
     soap_envelope(options) do |xml|

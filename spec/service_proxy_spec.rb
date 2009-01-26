@@ -5,11 +5,11 @@ require File.dirname(__FILE__) + '/service_helper.rb'
 
 describe ServiceProxy do  
   it "should raise on an invalid URI" do
-    lambda { ServiceProxy.new('bacon') }.should raise_error(ArgumentError)
+    lambda { ServiceProxy::Base.new('bacon') }.should raise_error(ArgumentError)
   end
   
   it "should raise on invalid WSDL" do
-    lambda { ServiceProxy.new('http://www.yahoo.com') }.should raise_error(RuntimeError)
+    lambda { ServiceProxy::Base.new('http://www.yahoo.com') }.should raise_error(RuntimeError)
   end
     
   describe "connecting to an Instant Message Service" do

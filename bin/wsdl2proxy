@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'thor'
+require 'service_proxy'
+
+module ServiceProxy
+  class Generator < Thor
+    desc "generate [endpoint] [filename]",
+       "parse endpoint and generate stubs"
+    def generate(endpoint, filename)
+    end
+  end
+end
+
+ServiceProxy::Generator.start
