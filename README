@@ -2,23 +2,18 @@ ServiceProxy
 
 ServiceProxy is a lightweight SOAP library for Ruby. 
 
-How it works
+HOW IT WORKS
 
 Loading the library:
 
 require 'rubygems'
-require 'service_proxy'
+require 'service_proxy/base'
 
-Using the library:
+WRITING A PROXY BY HAND
 
-Unlike SOAP4R, this library takes a very different approach to building 
+Unlike Soap4R, this library takes a very different approach to building 
 requests and parsing responses. There is little magic and no code 
 generation with this library. 
-
-You will need to understand some simple things about SOAP before you
-can use this library. Using a tool like SOAPUI or SoapClient, you can
-easily get enough information to use this library with existing SOAP
-services.
 
 For each service endpoint you want to connect to, you will need to 
 subclass ServiceProxy.
@@ -27,7 +22,7 @@ Let's say you want to call the method cool1 on a service:
 
 First, you create a subclass:
 
-class SuperCoolService < ServiceProxy
+class SuperCoolService < ServiceProxy::Base
   
   def build_cool1(options)
     # This will generate a simple SOAP envelope. Using the xml block local, you 
@@ -50,6 +45,17 @@ Next, you can attempt to call the service:
 
 service = SuperCoolService.new(url_to_wsdl)
 service.cool1
+
+GENERATING A PROXY
+
+ServiceProxy comes with a simple generator to get started. It can be invoked
+as follows:
+
+wsdl2proxy [wsdl]
+
+This will generate a file named default.rb, in the current directory. The class
+will be named GeneratedService, and will define build and parse methods for all
+of the available service methods.
 
 CONTRIBUTORS
 

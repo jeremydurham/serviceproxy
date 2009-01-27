@@ -1,0 +1,6 @@
+require 'rubygems'
+require 'service_proxy/base'
+
+class %name% < ServiceProxy::Base
+%body%
+end

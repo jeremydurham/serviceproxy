@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'spec'
-require File.dirname(__FILE__) + '/../lib/service_proxy.rb'
-require File.dirname(__FILE__) + '/service_helper.rb'
+require File.dirname(__FILE__) + '/../lib/service_proxy/base'
+require File.dirname(__FILE__) + '/service_helper'
 
 describe ServiceProxy do  
   it "should raise on an invalid URI" do

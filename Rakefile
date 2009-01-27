@@ -3,7 +3,7 @@ require 'rake/gempackagetask'
 require 'rubygems/specification'
 require 'rake/rdoctask'
 require 'spec/rake/spectask'
-require File.join(File.dirname(__FILE__), 'lib', 'service_proxy')
+require File.join(File.dirname(__FILE__), 'lib', 'service_proxy', 'base')
 
 NAME = "serviceproxy"
 AUTHOR = "Jeremy Durham"
@@ -36,12 +36,11 @@ spec = Gem::Specification.new do |s|
   s.email = EMAIL
   s.homepage = HOMEPAGE
   s.require_path = 'lib'
-  s.executables          = ['wsdl2proxy']
+  s.executables = ['wsdl2proxy']
   s.files = %w(LICENSE README Rakefile) + Dir.glob("{lib,spec}/**/*")
   
   s.add_dependency "nokogiri"
   s.add_dependency "hpricot"
-  s.add_dependency "thor"
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
