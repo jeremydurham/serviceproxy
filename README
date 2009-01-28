@@ -9,43 +9,6 @@ Loading the library:
 require 'rubygems'
 require 'service_proxy/base'
 
-WRITING A PROXY BY HAND
-
-Unlike Soap4R, this library takes a very different approach to building 
-requests and parsing responses. There is little magic and no code 
-generation with this library. 
-
-For each service endpoint you want to connect to, you will need to 
-subclass ServiceProxy.
-
-Let's say you want to call the method cool1 on a service:
-
-First, you create a subclass:
-
-class SuperCoolService < ServiceProxy::Base
-  
-  def build_cool1(options)
-    # This will generate a simple SOAP envelope. Using the xml block local, you 
-    # can inject XML into the body of the envelope.
-    soap_envelope(options) do |xml|
-      # your XML here
-    end
-  end
-  
-  def parse_cool1(response)
-    # The response parameter is a simple Net::HTTP response
-    # here, we use Hpricot to parse it, but you could use
-    # Nokogiri, REXML, etc
-    xml = Hpricot.XML(response.body)
-    xml.at("cool1Result").inner_text
-  end
-end
-
-Next, you can attempt to call the service:
-
-service = SuperCoolService.new(url_to_wsdl)
-service.cool1
-
 GENERATING A PROXY
 
 ServiceProxy comes with a simple generator to get started. It can be invoked
@@ -56,6 +19,8 @@ wsdl2proxy [wsdl]
 This will generate a file named default.rb, in the current directory. The class
 will be named GeneratedService, and will define build and parse methods for all
 of the available service methods.
+
+Please refer to the specs for extended usage examples.
 
 CONTRIBUTORS
 
