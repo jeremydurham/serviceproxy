@@ -19,6 +19,7 @@ end
 template_filename = File.dirname(__FILE__) + '/../lib/templates/proxy.rbt'
 proxy = ServiceProxy::Base.new(ARGV[0])
 output_filename = 'default.rb'
+output_klass_name = 'GeneratedService'
 output = ''
 proxy.service_methods.each do |service_method|
   output << <<-EOS  
@@ -34,7 +35,7 @@ proxy.service_methods.each do |service_method|
   EOS
 end
 template = File.read(template_filename)
-template.gsub!(/%name%/, 'GeneratedService')
+template.gsub!(/%name%/, output_klass_name)
 template.gsub!(/%body%/, output)
 File.open(output_filename, 'w') { |f| f.puts template }
-puts "Generated proxy #{output_filename} - You can use the proxy by executing GeneratedService.new('#{ARGV[0]}')"
+puts "Generated proxy #{output_filename} - You can use the proxy by executing #{output_klass_name}.new('#{ARGV[0]}')"
