@@ -7,7 +7,7 @@ require 'uri'
 
 module ServiceProxy
   class Base
-    VERSION = '0.1.0'
+    VERSION = '0.1.1'
   
     attr_accessor :endpoint, :service_methods, :soap_actions, :service_uri, :http, :service_http, :uri, :debug, :wsdl, :target_namespace, :service_ports
 
