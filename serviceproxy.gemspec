@@ -10,7 +10,8 @@ Gem::Specification.new do |s|
   s.description = %q{Lightweight SOAP library for Ruby}
   s.email = %q{jeremydurham@gmail.com}
   s.extra_rdoc_files = ["README", "LICENSE"]
-  s.files = ["LICENSE", "README", "Rakefile", "lib/service_proxy.rb", "spec/service_helper.rb", "spec/service_proxy_spec.rb"]
+  s.files = ["LICENSE", "README", "Rakefile", "lib/service_proxy/base.rb", "spec/service_helper.rb", "spec/service_proxy_spec.rb"]
+  s.executables = ['wsdl2proxy']
   s.has_rdoc = true
   s.homepage = %q{}
   s.require_paths = ["lib"]
