@@ -1,8 +1,9 @@
 # -*- encoding: utf-8 -*-
+require File.join(File.dirname(__FILE__), 'lib', 'service_proxy', 'base')
 
 Gem::Specification.new do |s|
   s.name = %q{serviceproxy}
-  s.version = "0.0.1"
+  s.version = ServiceProxy::Base::VERSION
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremy Durham"]
