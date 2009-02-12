@@ -37,11 +37,7 @@ module ServiceProxy
     end
   
     def service_uri
-      @service_uri ||= if self.respond_to?(:service_port)
-        self.service_port
-      else
-        self.uri
-      end
+      @service_uri ||= self.respond_to?(:service_port) ? self.service_port : self.uri
     end
   
     def service_http

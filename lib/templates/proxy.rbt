@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'service_proxy/base'
+require 'hpricot'
 
 class %name% < ServiceProxy::Base
 %body%
