@@ -11,7 +11,7 @@ end
 
 module ServiceProxy
   class Base
-    VERSION = '0.1.2'
+    VERSION = '0.1.4'
   
     attr_accessor :endpoint, :service_methods, :soap_actions, :service_uri, :http, :service_http, :uri, :debug, :wsdl, :target_namespace, :service_ports
 
