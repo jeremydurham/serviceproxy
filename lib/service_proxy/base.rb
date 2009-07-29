@@ -1,13 +1,17 @@
-require 'rubygems'
-require 'nokogiri'
 require 'net/http'
 require 'net/https'
-require 'builder'
 require 'uri'
+
+begin
+  require 'nokogiri'
+  require 'builder'
+rescue LoadError
+  puts "Could not load nokogiri or builder. Please make sure they are installed and in your $LOAD_PATH."
+end
 
 module ServiceProxy
   class Base
-    VERSION = '0.1.1'
+    VERSION = '0.1.2'
   
     attr_accessor :endpoint, :service_methods, :soap_actions, :service_uri, :http, :service_http, :uri, :debug, :wsdl, :target_namespace, :service_ports
 
