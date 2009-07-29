@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'spec'
-require 'service_proxy/base'
+require 'lib/service_proxy/base'
 require 'spec/service_helper'
 
 describe ServiceProxy do  
