@@ -39,7 +39,6 @@ spec = Gem::Specification.new do |s|
   s.executables = ['wsdl2proxy']
   s.files = %w(LICENSE README Rakefile) + Dir.glob("{lib,spec}/**/*")
   
-  s.add_dependency "nokogiri"
   s.add_dependency "hpricot"
 end
 
