@@ -3,10 +3,10 @@ require 'net/https'
 require 'uri'
 
 begin
-  require 'nokogiri'
+  require 'hpricot'
   require 'builder'
 rescue LoadError
-  puts "Could not load nokogiri or builder. Please make sure they are installed and in your $LOAD_PATH."
+  puts "Could not load hpricot or builder. Please make sure they are installed and in your $LOAD_PATH."
 end
 
 module ServiceProxy
@@ -76,12 +76,12 @@ module ServiceProxy
     
     def get_wsdl
       response = self.http.get("#{self.uri.path}?#{self.uri.query}")
-      self.wsdl = Nokogiri.XML(response.body)    
+      self.wsdl = Hpricot.XML(response.body)
     end
   
     def parse_wsdl
-      method_list = []    
-      self.wsdl.xpath('//*[name()="soap:operation"]').each do |operation|
+      method_list = []
+      self.wsdl.search('//soap:operation').each do |operation|
         operation_name = operation.parent.get_attribute('name')
         method_list << operation_name
         self.soap_actions[operation_name] = operation.get_attribute('soapAction')
@@ -90,16 +90,16 @@ module ServiceProxy
       self.service_methods = method_list.sort
     
       port_list = {}
-      self.wsdl.xpath('//wsdl:port', {"xmlns:wsdl" => 'http://schemas.xmlsoap.org/wsdl/'}).each do |port|
+      self.wsdl.search('//port').each do |port|
         name = underscore(port['name'])
-        location = port.xpath('./*[@location]').first['location']
+        location = port.search('/[@location]').first['location']
         port_list[name] = location
       end
       self.service_ports = port_list
     end
   
     def setup_namespace
-      self.target_namespace = self.wsdl.namespaces['xmlns:tns']
+      self.target_namespace = self.wsdl.search("//definitions").first.get_attribute("xmlns:tns")
     end
 
     def build_request(method, options)
