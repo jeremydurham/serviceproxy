@@ -99,7 +99,9 @@ module ServiceProxy
     end
   
     def setup_namespace
-      self.target_namespace = self.wsdl.search("//definitions").first.get_attribute("xmlns:tns")
+      namespace = self.wsdl.at("definitions")
+      namespace = self.wsdl.at("wsdl:definitions") if namespace.nil?
+      self.target_namespace = namespace.get_attribute("xmlns:tns")
     end
 
     def build_request(method, options)
