@@ -86,6 +86,11 @@ module ServiceProxy
         method_list << operation_name
         self.soap_actions[operation_name] = operation.get_attribute('soapAction')
       end
+      self.wsdl.xpath('//*[name()="wsdl:operation"]').each do |wsdl_operation|
+        operation_name = wsdl_operation.get_attribute('name')
+        method_list << operation_name
+        self.soap_actions[operation_name] = wsdl_operation.xpath('//*[name()="wsdlsoap:operation"]').first.get_attribute('soapAction')
+      end
       raise RuntimeError, "Could not parse WSDL" if method_list.empty?
       self.service_methods = method_list.sort
     

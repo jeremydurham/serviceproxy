@@ -43,6 +43,16 @@ describe ServiceProxy do
     end
   end
   
+  describe "connecting to the Ebay Service" do
+    before do
+      @proxy = EbayService.new('http://developer.ebay.com/webservices/latest/eBaySvc.wsdl')
+    end
+    
+    it "should have methods" do
+      @proxy.service_methods.should_not be_nil
+    end
+  end
+  
   describe "making a service call without a parse method" do
     before do
       @proxy = InvalidSHAGeneratorService.new('https://sec.neurofuzz-software.com/paos/genSSHA-SOAP.php?wsdl')

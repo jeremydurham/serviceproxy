@@ -46,3 +46,6 @@ class InvalidSHAGeneratorService < ServiceProxy::Base
   end
   
 end
+
+class EbayService < ServiceProxy::Base
+end

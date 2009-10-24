@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{serviceproxy}
-  s.version = '0.1.4'
+  s.version = '0.1.5'
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremy Durham"]
-  s.date = %q{2008-12-13}
+  s.date = %q{2009-10-23}
   s.description = %q{Lightweight SOAP library for Ruby}
   s.email = %q{jeremydurham@gmail.com}
   s.extra_rdoc_files = ["README", "LICENSE"]
