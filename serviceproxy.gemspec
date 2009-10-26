@@ -2,16 +2,16 @@
 
 Gem::Specification.new do |s|
   s.name = %q{serviceproxy}
-  s.version = '0.1.5'
+  s.version = '0.2.0'
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremy Durham"]
-  s.date = %q{2009-10-23}
+  s.date = %q{2009-10-25}
   s.description = %q{Lightweight SOAP library for Ruby}
   s.email = %q{jeremydurham@gmail.com}
   s.extra_rdoc_files = ["README", "LICENSE"]
-  s.files = ["LICENSE", "README", "Rakefile", "lib/service_proxy/base.rb", "lib/templates/proxy.rbt", 
-             "spec/service_helper.rb", "spec/service_proxy_spec.rb"]
+  s.files = ["LICENSE", "README", "Rakefile", "lib/service_proxy/base.rb", "lib/service_proxy/parser.rb", 
+             "lib/templates/proxy.rbt", "spec/service_helper.rb", "spec/service_proxy_spec.rb"]
   s.executables = ['wsdl2proxy']
   s.has_rdoc = true
   s.homepage = %q{}
