@@ -58,7 +58,7 @@ describe ServiceProxy do
       @proxy = ZipcodeService.new('http://ws.fraudlabs.com/zipcodeworldUS_webservice.asmx?wsdl')
     end
     
-    it "should not fail" do
+    it "should be successful" do
       @proxy.ZIPCodeWorld_US.should_not be_nil
     end
   end
@@ -77,4 +77,14 @@ describe ServiceProxy do
     end
   end
   
+  describe "debugging a service call" do
+    before do
+      @proxy = ZipcodeService.new('http://ws.fraudlabs.com/zipcodeworldUS_webservice.asmx?wsdl')
+    end
+    
+    it "should set_debug_output on the HTTP connection" do
+      @proxy.http.should_receive(:set_debug_output)
+      @proxy.debug = true
+    end
+  end
 end

@@ -23,15 +23,20 @@ module ServiceProxy
       self.endpoint = endpoint
       self.setup
     end
-  
+
     def call_service(options)
       method   = options[:method]
-      headers  = { 'content-type' => 'text/xml; charset=utf-8', 'SOAPAction' => self.soap_actions[method] || '' }
+      headers  = { 'content-type' => 'text/xml; charset=utf-8', 'SOAPAction' => self.soap_actions[method] }
       body     = build_request(method, options)
       response = self.http.request_post(self.uri.path, body, headers)
       parse_response(method, response)
-    end  
+    end
 
+    def debug=(value)
+      @debug = value
+      self.http.set_debug_output(STDOUT) if value
+    end
+    
   protected
 
     def setup
@@ -41,10 +46,12 @@ module ServiceProxy
       get_wsdl
       parse_wsdl
     end
-    
+  
+  private
+  
     def setup_http
-      raise ArgumentError, "Endpoint URI must be valid" unless self.uri.scheme    
-      self.http = Net::HTTP.new(self.uri.host, self.uri.port)
+      raise ArgumentError, "Endpoint URI must be valid" unless self.uri.scheme
+      self.http ||= Net::HTTP.new(self.uri.host, self.uri.port)
       setup_https if self.uri.scheme == 'https'
       self.http.set_debug_output(STDOUT) if self.debug
       self.http.read_timeout = 5
@@ -54,8 +61,6 @@ module ServiceProxy
       self.http.use_ssl = true
       self.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
-  
-  private
   
     def setup_uri
       self.uri = URI.parse(self.endpoint)

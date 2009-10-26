@@ -5,3 +5,6 @@ require 'hpricot'
 class %name% < ServiceProxy::Base
 %body%
 end
+
+proxy = %name%.new('%uri%')
+p proxy.service_methods

@@ -31,11 +31,12 @@ proxy.service_methods.each do |service_method|
   
   def parse_#{underscore(service_method)}(response)
     Hpricot.XML(response.body)
-  end  
+  end
   EOS
 end
 template = File.read(template_filename)
 template.gsub!(/%name%/, output_klass_name)
 template.gsub!(/%body%/, output)
+template.gsub!(/%uri%/, ARGV[0])
 File.open(output_filename, 'w') { |f| f.puts template }
 puts "Generated proxy #{output_filename} - You can use the proxy by executing #{output_klass_name}.new('#{ARGV[0]}')"

@@ -4,7 +4,7 @@ module ServiceProxy
     
     def initialize(*args)
       self.service_methods = []
-      self.soap_actions = {}
+      self.soap_actions = Hash.new('')
       super
     end
     
