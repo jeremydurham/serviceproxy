@@ -53,9 +53,23 @@ describe ServiceProxy do
     end
   end
   
+  describe "connect to the Zipcode Service" do
+    before do
+      @proxy = ZipcodeService.new('http://ws.fraudlabs.com/zipcodeworldUS_webservice.asmx?wsdl')
+    end
+    
+    it "should not fail" do
+      @proxy.ZIPCodeWorld_US.should_not be_nil
+    end
+  end
+  
   describe "making a service call without a parse method" do
     before do
       @proxy = InvalidSHAGeneratorService.new('https://sec.neurofuzz-software.com/paos/genSSHA-SOAP.php?wsdl')
+    end
+  
+    it "should be SSL" do
+      @proxy.http.use_ssl.should be_true
     end
   
     it "should raise a no method error" do
@@ -63,13 +77,4 @@ describe ServiceProxy do
     end
   end
   
-  describe "using the #service_port hook" do
-    before do
-      @proxy = ISBNService.new('http://webservices.daehosting.com/services/isbnservice.wso?WSDL')
-    end
-    
-    it "should have the dummy query argument" do
-      @proxy.send(:service_uri).path.should match(/\?dummy=1/)
-    end
-  end
 end

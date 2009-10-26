@@ -12,13 +12,7 @@ class ISBNService < ServiceProxy::Base
   def parse_is_valid_isbn13(response)
     xml = Hpricot.XML(response.body)
     xml.at("m:IsValidISBN13Result").inner_text == 'true' ? true : false
-  end
-  
-  def service_port
-    local_uri = URI.parse(self.isbn_service_soap_uri.to_s)
-    local_uri.path << "?dummy=1"
-    local_uri
-  end
+  end  
 end
 
 class SHAGeneratorService < ServiceProxy::Base
@@ -48,4 +42,17 @@ class InvalidSHAGeneratorService < ServiceProxy::Base
 end
 
 class EbayService < ServiceProxy::Base
+end
+
+class ZipcodeService < ServiceProxy::Base
+
+  def build_zip_code_world_us(options)
+    soap_envelope(options) do |xml|
+    end
+  end
+
+  def parse_zip_code_world_us(response)
+    Hpricot.XML(response.body)
+  end
+
 end
