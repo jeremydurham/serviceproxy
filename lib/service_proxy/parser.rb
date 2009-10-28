@@ -21,9 +21,6 @@ module ServiceProxy
           self.soap_actions[self.service_methods.last] = soap_action.value if soap_action          
           (self.service_methods << service_method unless self.service_methods.include?(service_method)) if service_method
       end
-    end
-    
-    def end_element_namespace(name, prefix, uri)
-    end
+    end    
   end
 end
