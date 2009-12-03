@@ -14,7 +14,7 @@ require File.dirname(__FILE__) + '/parser'
 
 module ServiceProxy
   class Base
-    VERSION = '0.2.0'
+    VERSION = '0.2.1'
   
     attr_accessor :endpoint, :service_methods, :soap_actions, :http, 
                   :uri, :debug, :wsdl, :target_namespace
