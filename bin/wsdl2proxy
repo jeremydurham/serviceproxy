@@ -30,7 +30,7 @@ proxy.service_methods.each do |service_method|
   end
   
   def parse_#{underscore(service_method)}(response)
-    Hpricot.XML(response.body)
+    Nokogiri.XML(response.body)
   end
   EOS
 end
