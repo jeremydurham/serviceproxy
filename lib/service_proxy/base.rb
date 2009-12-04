@@ -1,7 +1,6 @@
 require 'net/http'
 require 'net/https'
 require 'uri'
-require 'open-uri'
 
 begin
   require 'nokogiri'
