@@ -13,6 +13,7 @@ module ServiceProxy
       case name
         when 'binding'
           self.binding = true
+        when 'port'          
         when 'definitions'
           self.wsdl_namespace = prefix if uri == 'http://schemas.xmlsoap.org/wsdl/'
           self.soap_namespace = prefix if uri == 'http://schemas.xmlsoap.org/wsdl/soap/'
@@ -32,6 +33,7 @@ module ServiceProxy
       case name
         when 'binding'
           self.binding = false if prefix == self.wsdl_namespace
+        when 'port'
       end
     end
   end
