@@ -53,13 +53,23 @@ describe ServiceProxy do
     end
   end
   
-  describe "connect to the Zipcode Service" do
+  describe "connecting to the Zipcode Service" do
     before do
       @proxy = ZipcodeService.new('http://ws.fraudlabs.com/zipcodeworldUS_webservice.asmx?wsdl')
     end
     
     it "should be successful" do
       @proxy.ZIPCodeWorld_US.should_not be_nil
+    end
+  end
+  
+  describe "connecting to the Daily .NET fact Service" do
+    before do
+      @proxy = DailyDotNetFactService.new('http://www.xmlme.com/WSDailyNet.asmx?WSDL')
+    end
+    
+    it "should be successful" do
+      @proxy.GetDotnetDailyFact.should_not be_nil
     end
   end
   

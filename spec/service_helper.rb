@@ -55,3 +55,15 @@ class ZipcodeService < ServiceProxy::Base
   end
 
 end
+
+class DailyDotNetFactService < ServiceProxy::Base
+  def build_get_dotnet_daily_fact(options)
+    soap_envelope(options) do |xml|
+    end
+  end
+
+  def parse_get_dotnet_daily_fact(response)
+    xml = Nokogiri.XML(response.body)
+    xml.at('//xmlns:GetDotnetDailyFactResult', 'xmlns' => 'http://xmlme.com/WebServices').inner_text
+  end
+end
