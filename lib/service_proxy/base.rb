@@ -21,6 +21,7 @@ module ServiceProxy
 
     def initialize(endpoint)
       self.endpoint = endpoint
+      self.service_methods = []
       self.setup
     end
 
@@ -40,7 +41,6 @@ module ServiceProxy
   protected
 
     def setup
-      self.service_methods = []
       setup_uri
       setup_http
       get_wsdl

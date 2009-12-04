@@ -29,7 +29,10 @@ module ServiceProxy
     end
     
     def end_element_namespace(name, prefix, uri)
-      self.binding = false if name == 'binding' && prefix == self.wsdl_namespace
+      case name
+        when 'binding'
+          self.binding = false if prefix == self.wsdl_namespace
+      end
     end
   end
 end
