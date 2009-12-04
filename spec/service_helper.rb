@@ -1,5 +1,3 @@
-require 'hpricot'
-
 # Service Endpoints
 class ISBNService < ServiceProxy::Base  
   
@@ -10,8 +8,9 @@ class ISBNService < ServiceProxy::Base
   end
   
   def parse_is_valid_isbn13(response)
-    xml = Hpricot.XML(response.body)
-    xml.at("m:IsValidISBN13Result").inner_text == 'true' ? true : false
+    xml = Nokogiri.XML(response.body)
+    namespace = { 'm' => 'http://webservices.daehosting.com/ISBN' }
+    xml.at('//m:IsValidISBN13Result', namespace).inner_text == 'true' ? true : false
   end  
 end
 
@@ -25,7 +24,7 @@ class SHAGeneratorService < ServiceProxy::Base
   end
   
   def parse_gen_ssha(response)
-    xml = Hpricot.XML(response.body)
+    xml = Nokogiri.XML(response.body)
     xml.at("return").inner_text
   end
 end
@@ -52,7 +51,7 @@ class ZipcodeService < ServiceProxy::Base
   end
 
   def parse_zip_code_world_us(response)
-    Hpricot.XML(response.body)
+    xml = Nokogiri.XML(response.body)
   end
 
 end
