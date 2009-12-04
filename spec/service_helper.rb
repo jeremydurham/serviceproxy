@@ -41,6 +41,16 @@ class InvalidSHAGeneratorService < ServiceProxy::Base
 end
 
 class EbayService < ServiceProxy::Base
+  def build_get_user(options)
+    soap_envelope(options) do |xml|
+      xml.GetUserRequest do
+      end
+    end
+  end
+
+  def parse_get_user(response)
+    Nokogiri.XML(response.body)
+  end
 end
 
 class ZipcodeService < ServiceProxy::Base

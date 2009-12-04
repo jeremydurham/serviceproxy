@@ -51,6 +51,10 @@ describe ServiceProxy do
     it "should have methods" do
       @proxy.service_methods.should_not be_nil
     end
+    
+    it "should be successful" do
+      @proxy.GetUser.should_not be_nil
+    end
   end
   
   describe "connecting to the Zipcode Service" do
