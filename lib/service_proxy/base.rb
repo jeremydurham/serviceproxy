@@ -15,11 +15,10 @@ module ServiceProxy
   class Base
     VERSION = '0.2.1'
   
-    attr_accessor :endpoint, :service_methods, :soap_actions, :http, 
-                  :uri, :debug, :wsdl, :target_namespace
+    attr_accessor :service_methods, :soap_actions, :http, :uri, :debug, :wsdl, :target_namespace
 
-    def initialize(endpoint)
-      self.endpoint = endpoint
+    def initialize(uri)
+      self.uri = URI.parse(uri)
       self.service_methods = []
       self.setup
     end
@@ -40,7 +39,6 @@ module ServiceProxy
   protected
 
     def setup
-      setup_uri
       setup_http
       get_wsdl
       parse_wsdl
@@ -60,11 +58,7 @@ module ServiceProxy
       self.http.use_ssl = true
       self.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
-  
-    def setup_uri
-      self.uri = URI.parse(self.endpoint)
-    end
-    
+      
     def get_wsdl
       response = self.http.get("#{self.uri.path}?#{self.uri.query}")
       self.wsdl = response.body
