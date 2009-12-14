@@ -85,13 +85,26 @@ module ServiceProxy
       self.respond_to?(parser) ? self.send(parser, response) : 
                                  raise(NoMethodError, "You must define the parse method: #{parser}")
     end
+    
+    def soap_header(options, &block)
+      xml.Security do
+        xml.wsse(:UsernameToken) do
+          xml.wsse(:Username)
+          xml.wsse(:Password)              
+        end
+      end      
+    end
   
     def soap_envelope(options, &block)
       xsd = 'http://www.w3.org/2001/XMLSchema'
       env = 'http://schemas.xmlsoap.org/soap/envelope/'
       xsi = 'http://www.w3.org/2001/XMLSchema-instance'
+      wsse = 'http://schemas.xmlsoap.org/ws/2002/07/secext'
+      wsu = 'http://schemas.xmlsoap.org/ws/2002/07/utility'
       xml = Builder::XmlMarkup.new
-      xml.env(:Envelope, 'xmlns:xsd' => xsd, 'xmlns:env' => env, 'xmlns:xsi' => xsi) do
+      xml.env(:Envelope, 'xmlns:xsd' => xsd, 'xmlns:env' => env, 'xmlns:xsi' => xsi, 'xmlns:wsse' => wsse, 'xmlns:wsu' => wsu) do
+        xml.env(:Header) do
+        end
         xml.env(:Body) do
           xml.__send__(options[:method].to_sym, 'xmlns' => self.target_namespace) do
             yield xml if block_given?
@@ -100,7 +113,7 @@ module ServiceProxy
       end
       xml
     end
-      
+          
     def method_missing(method, *args)
       method_name = method.to_s
       options = args.pop || {}

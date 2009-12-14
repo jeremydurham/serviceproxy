@@ -77,3 +77,6 @@ class DailyDotNetFactService < ServiceProxy::Base
     xml.at('//xmlns:GetDotnetDailyFactResult', 'xmlns' => 'http://xmlme.com/WebServices').inner_text
   end
 end
+
+class WSSEService < ServiceProxy::Base
+end
