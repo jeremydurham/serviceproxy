@@ -12,9 +12,14 @@ describe ServiceProxy do
     lambda { ServiceProxy::Base.new('http://www.yahoo.com') }.should raise_error(RuntimeError)
   end
   
+  it "should not have the wsse flag set by default" do
+    @proxy = ISBNService.new('http://webservices.daehosting.com/services/isbnservice.wso?WSDL')
+    @proxy.wsse?.should_not be_true
+  end
+  
   it "should not have the debug flag set by default" do
     @proxy = ISBNService.new('http://webservices.daehosting.com/services/isbnservice.wso?WSDL')
-    @proxy.debug.should be_nil
+    @proxy.debug.should_not be_true
   end
       
   describe "connecting to an ISBN validator" do

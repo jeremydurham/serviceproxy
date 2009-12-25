@@ -2,6 +2,7 @@ require 'net/http'
 require 'net/https'
 require 'uri'
 
+
 begin
   require 'nokogiri'
   require 'builder'
@@ -10,12 +11,14 @@ rescue LoadError
 end
 
 require File.dirname(__FILE__) + '/parser'
+require File.dirname(__FILE__) + '/wsse'
 
 module ServiceProxy
   class Base
     VERSION = '0.2.1'
   
-    attr_accessor :service_methods, :soap_actions, :http, :uri, :debug, :wsdl, :target_namespace
+    attr_accessor :service_methods, :soap_actions, :http, :uri, :wsdl, :target_namespace, :wsse
+    attr_reader :debug
 
     def initialize(uri)
       self.uri = URI.parse(uri)
@@ -36,6 +39,14 @@ module ServiceProxy
       self.http.set_debug_output(STDOUT) if value
     end
     
+    def wsse(&block)
+      @wsse = ServiceProxy::WSSE.new(&block)
+    end
+    
+    def wsse?
+      @wsse.nil? ? false : true
+    end
+    
   protected
 
     def setup
@@ -48,7 +59,7 @@ module ServiceProxy
   
     def setup_http
       raise ArgumentError, "Endpoint URI must be valid" unless self.uri.scheme
-      self.http ||= Net::HTTP.new(self.uri.host, self.uri.port)
+      self.http = Net::HTTP.new(self.uri.host, self.uri.port)
       setup_https if self.uri.scheme == 'https'
       self.http.set_debug_output(STDOUT) if self.debug
       self.http.read_timeout = 5
@@ -86,15 +97,6 @@ module ServiceProxy
                                  raise(NoMethodError, "You must define the parse method: #{parser}")
     end
     
-    def soap_header(options, &block)
-      xml.Security do
-        xml.wsse(:UsernameToken) do
-          xml.wsse(:Username)
-          xml.wsse(:Password)              
-        end
-      end      
-    end
-  
     def soap_envelope(options, &block)
       xsd = 'http://www.w3.org/2001/XMLSchema'
       env = 'http://schemas.xmlsoap.org/soap/envelope/'
@@ -103,8 +105,7 @@ module ServiceProxy
       wsu = 'http://schemas.xmlsoap.org/ws/2002/07/utility'
       xml = Builder::XmlMarkup.new
       xml.env(:Envelope, 'xmlns:xsd' => xsd, 'xmlns:env' => env, 'xmlns:xsi' => xsi, 'xmlns:wsse' => wsse, 'xmlns:wsu' => wsu) do
-        xml.env(:Header) do
-        end
+        self.wsse.to_xml if self.wsse?
         xml.env(:Body) do
           xml.__send__(options[:method].to_sym, 'xmlns' => self.target_namespace) do
             yield xml if block_given?
