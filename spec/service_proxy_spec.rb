@@ -1,7 +1,7 @@
 require 'rubygems'
-require 'spec'
-require 'lib/service_proxy/base'
-require 'spec/service_helper'
+require 'rspec'
+require 'service_proxy/base'
+require 'service_helper'
 
 describe ServiceProxy do  
   it "should raise on an invalid URI" do
@@ -34,7 +34,7 @@ describe ServiceProxy do
     end
     
     it "should be SSL" do
-      @proxy.http.use_ssl.should be_true
+      @proxy.http.use_ssl?.should be_true
     end
     
     it "should generate a SSH hash" do
@@ -83,7 +83,7 @@ describe ServiceProxy do
     end
   
     it "should be SSL" do
-      @proxy.http.use_ssl.should be_true
+      @proxy.http.use_ssl?.should be_true
     end
   
     it "should raise a no method error" do
