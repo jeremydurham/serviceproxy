@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake/gempackagetask'
 require 'rubygems/specification'
 require 'rake/rdoctask'
-require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 require File.join(File.dirname(__FILE__), 'lib', 'service_proxy', 'base')
 
 NAME = "serviceproxy"
@@ -74,21 +74,15 @@ task :rcov do
   end
 end
 
-file_list = FileList['spec/**/*_spec.rb']
-
 desc "Run all examples"
-Spec::Rake::SpecTask.new('spec') do |t|
-  t.spec_files = file_list
+RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 namespace :spec do
   desc "Run all examples with RCov"
-  Spec::Rake::SpecTask.new('rcov') do |t|
-    t.spec_files = file_list
+  RSpec::Core::RakeTask.new(:rcov) do |t|
     t.rcov = true
-    t.rcov_dir = "doc/coverage"
-    t.rcov_opts = ['--exclude', 'spec']
-  end  
+  end
 end
 
 desc 'Default: run unit tests.'
