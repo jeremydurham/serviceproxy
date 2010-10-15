@@ -1,10 +1,13 @@
 ServiceProxy
+============
 
 ServiceProxy is a lightweight SOAP library for Ruby. 
 
 HOW IT WORKS
+------------
 
 GENERATING A PROXY
+------------------
 
 ServiceProxy comes with a simple generator to get started. It can be invoked
 as follows:
@@ -22,5 +25,6 @@ the generator.
 Please refer to the specs for extended usage examples.
 
 CONTRIBUTORS
+------------
 
 Rich Cavanaugh
