@@ -19,8 +19,19 @@ will be named GeneratedService, and will define build and parse methods for all
 of the available service methods, as well as add some boilerplate code to inspect
 the available methods on the service. 
 
+Rails Support
+-------------
+
 ServiceProxy does not have any dependencies on Rails or other frameworks, nor does
 the generator.
+
+Ruby 1.9 Support
+----------------
+
+ServiceProxy supports Ruby 1.9
+
+USAGE
+-----
 
 Please refer to the specs for extended usage examples.
 
