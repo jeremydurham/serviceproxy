@@ -29,7 +29,7 @@ spec = Gem::Specification.new do |s|
   s.version = ServiceProxy::Base::VERSION
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true
-  s.extra_rdoc_files = ["README", "LICENSE"]
+  s.extra_rdoc_files = ["README.md", "LICENSE"]
   s.summary = SUMMARY
   s.description = s.summary
   s.author = AUTHOR
@@ -37,10 +37,9 @@ spec = Gem::Specification.new do |s|
   s.homepage = HOMEPAGE
   s.require_path = 'lib'
   s.executables = ['wsdl2proxy']
-  s.files = %w(LICENSE README Rakefile) + Dir.glob("{lib,spec}/**/*")
+  s.files = %w(LICENSE README.md Rakefile) + Dir.glob("{lib,spec}/**/*")
   
   s.add_dependency "nokogiri"
-  s.add_dependency "hpricot"
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
