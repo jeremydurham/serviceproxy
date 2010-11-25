@@ -1,37 +1,23 @@
 # -*- encoding: utf-8 -*-
+lib = File.expand_path('../lib/', __FILE__)
+$:.unshift lib unless $:.include?(lib)
+
+require 'service_proxy/version'
 
 Gem::Specification.new do |s|
-  s.name = %q{serviceproxy}
-  s.version = '0.2.1'
+  s.name = "serviceproxy"
+  s.version = ServiceProxy::VERSION
+  s.platform = Gem::Platform::RUBY
+  s.authors = ['Jeremy Durham']
+  s.email = ['jeremydurham@gmail.com']
+  s.homepage = 'http://www.onemanwonder.com/projects/serviceproxy'  
+  s.summary = 'Lightweight SOAP library for Ruby'
+  s.description = 'Lightweight SOAP library for Ruby'
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Jeremy Durham"]
-  s.date = %q{2009-12-03}
-  s.description = %q{Lightweight SOAP library for Ruby}
-  s.email = %q{jeremydurham@gmail.com}
-  s.extra_rdoc_files = ["README", "LICENSE"]
-  s.files = ["LICENSE", "README", "Rakefile", "lib/service_proxy/base.rb", "lib/service_proxy/parser.rb", 
-             "lib/templates/proxy.rbt", "spec/service_helper.rb", "spec/service_proxy_spec.rb"]
+  s.required_rubygems_version = ">= 1.3.6"
+
   s.executables = ['wsdl2proxy']
-  s.has_rdoc = true
-  s.homepage = %q{}
-  s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.1}
-  s.summary = %q{Lightweight SOAP library for Ruby}
-
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 2
-
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<nokogiri>, [">= 0"])
-      s.add_runtime_dependency(%q<builder>, [">= 0"])
-    else
-      s.add_dependency(%q<nokogiri>, [">= 0"])
-      s.add_dependency(%q<builder>, [">= 0"])
-    end
-  else
-    s.add_dependency(%q<nokogiri>, [">= 0"])
-    s.add_dependency(%q<builder>, [">= 0"])
-  end
+  s.files = `git ls-files`.split("\n")
+  s.test_files = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.require_paths = ["lib"]  
 end
