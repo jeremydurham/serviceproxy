@@ -13,8 +13,6 @@ require File.dirname(__FILE__) + '/parser'
 
 module ServiceProxy
   class Base
-    VERSION = '0.2.1'
-  
     attr_accessor :service_methods, :soap_actions, :http, :uri, :debug, :wsdl, :target_namespace
 
     def initialize(uri)
@@ -76,8 +74,7 @@ module ServiceProxy
   
     def build_request(method, options)
       builder  = underscore("build_#{method}")    
-      self.respond_to?(builder) ? self.send(builder, options).target! : 
-                                  soap_envelope(options).target!
+      self.respond_to?(builder) ? self.send(builder, options).target! : soap_envelope(options).target!
     end
   
     def parse_response(method, response)
