@@ -16,6 +16,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = ">= 1.3.6"
 
+  s.add_dependency "nokogiri"
+
   s.executables = ['wsdl2proxy']
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- {test,spec,features}/*`.split("\n")
