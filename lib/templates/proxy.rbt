@@ -1,9 +1,0 @@
-require 'rubygems'
-require 'service_proxy/base'
-
-class %name% < ServiceProxy::Base
-%body%
-end
-
-proxy = %name%.new('%uri%')
-p proxy.service_methods
