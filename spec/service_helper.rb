@@ -1,5 +1,5 @@
 # Service Endpoints
-class ISBNService < ServiceProxy::Base  
+class ISBNService < ServiceProxy::Client  
   
   def build_is_valid_isbn13(options)
     soap_envelope(options) do |xml|
@@ -14,7 +14,7 @@ class ISBNService < ServiceProxy::Base
   end  
 end
 
-class SHAGeneratorService < ServiceProxy::Base
+class SHAGeneratorService < ServiceProxy::Client
   
   def build_gen_ssha(options)
     soap_envelope(options) do |xml|
@@ -29,7 +29,7 @@ class SHAGeneratorService < ServiceProxy::Base
   end
 end
 
-class InvalidSHAGeneratorService < ServiceProxy::Base
+class InvalidSHAGeneratorService < ServiceProxy::Client
   
   def build_gen_ssha(options)
     soap_envelope(options) do |xml|
@@ -40,7 +40,7 @@ class InvalidSHAGeneratorService < ServiceProxy::Base
   
 end
 
-class EbayService < ServiceProxy::Base
+class EbayService < ServiceProxy::Client
   def build_get_user(options)
     soap_envelope(options) do |xml|
       xml.GetUserRequest do
@@ -53,7 +53,7 @@ class EbayService < ServiceProxy::Base
   end
 end
 
-class ZipcodeService < ServiceProxy::Base
+class ZipcodeService < ServiceProxy::Client
 
   def build_zip_code_world_us(options)
     soap_envelope(options) do |xml|
@@ -66,7 +66,7 @@ class ZipcodeService < ServiceProxy::Base
 
 end
 
-class DailyDotNetFactService < ServiceProxy::Base
+class DailyDotNetFactService < ServiceProxy::Client
   def build_get_dotnet_daily_fact(options)
     soap_envelope(options) do |xml|
     end
