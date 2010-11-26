@@ -9,10 +9,8 @@ rescue LoadError
   puts "Could not load nokogiri or builder. Please make sure they are installed and in your $LOAD_PATH."
 end
 
-require File.dirname(__FILE__) + '/parser'
-
 module ServiceProxy
-  class Base
+  class Client
     attr_accessor :service_methods, :soap_actions, :http, :uri, :debug, :wsdl, :target_namespace
 
     def initialize(uri)
@@ -40,6 +38,7 @@ module ServiceProxy
       setup_http
       get_wsdl
       parse_wsdl
+      generate_methods
     end
   
   private
@@ -63,24 +62,41 @@ module ServiceProxy
     end
       
     def parse_wsdl
-      parser = ServiceProxy::Parser.new
+      parser = ServiceProxy::WSDL::Parser.new
       sax_parser = Nokogiri::XML::SAX::Parser.new(parser)
       sax_parser.parse(self.wsdl)
+      raise RuntimeError, "Could not parse WSDL" if parser.service_methods.empty?
       self.service_methods = parser.service_methods.sort
       self.target_namespace = parser.target_namespace
       self.soap_actions = parser.soap_actions
-      raise RuntimeError, "Could not parse WSDL" if self.service_methods.empty?
+    end
+    
+    def generate_methods
+      self.service_methods.each do |service_method|          
+        self.class.send(:define_method, service_method) do |*args|
+          options = args.pop || {}
+          call_service(options.update(:method => service_method))
+        end
+      
+        self.class.send(:define_method, ServiceProxy::Utils.underscore(service_method)) do |*args|
+          options = args.pop || {}
+          call_service(options.update(:method => service_method))
+        end
+      end
     end
   
     def build_request(method, options)
-      builder  = underscore("build_#{method}")    
+      builder  = ServiceProxy::Utils.underscore("build_#{method}")
       self.respond_to?(builder) ? self.send(builder, options).target! : soap_envelope(options).target!
     end
   
     def parse_response(method, response)
-      parser = underscore("parse_#{method}")
-      self.respond_to?(parser) ? self.send(parser, response) : 
-                                 raise(NoMethodError, "You must define the parse method: #{parser}")
+      parser = ServiceProxy::Utils.underscore("parse_#{method}")
+      if self.respond_to?(parser)
+        self.send(parser, response)
+      else
+        response.body
+      end
     end
   
     def soap_envelope(options, &block)
@@ -90,27 +106,18 @@ module ServiceProxy
       xml = Builder::XmlMarkup.new
       xml.env(:Envelope, 'xmlns:xsd' => xsd, 'xmlns:env' => env, 'xmlns:xsi' => xsi) do
         xml.env(:Body) do
-          xml.__send__(options[:method].to_sym, 'xmlns' => self.target_namespace) do
-            yield xml if block_given?
+          xml.__send__(options.delete(:method).to_sym, 'xmlns' => self.target_namespace) do
+            if block_given?
+              yield xml
+            else
+              options.each do |key, value|
+                xml.__send__(key, value)
+              end
+            end
           end
         end
       end
       xml
-    end
-      
-    def method_missing(method, *args)
-      method_name = method.to_s
-      options = args.pop || {}
-      super unless self.service_methods.include?(method_name)
-      call_service(options.update(:method => method_name))
-    end
-  
-    def underscore(camel_cased_word)
-      camel_cased_word.to_s.gsub(/::/, '/').
-        gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-        gsub(/([a-z\d])([A-Z])/,'\1_\2').
-        tr("-", "_").
-        downcase
-    end  
+    end      
   end
 end
