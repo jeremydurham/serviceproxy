@@ -1,34 +1,22 @@
 ServiceProxy
 ============
 
-ServiceProxy is a lightweight SOAP library for Ruby. 
+ServiceProxy is a lightweight SOAP library for Ruby. w
 
-HOW IT WORKS
+How it Works
 ------------
-
-GENERATING A PROXY
-------------------
-
-ServiceProxy comes with a simple generator to get started. It can be invoked
-as follows:
-
-wsdl2proxy [wsdl]
-
-This will generate a file named default.rb, in the current directory. The class
-will be named GeneratedService, and will define build and parse methods for all
-of the available service methods, as well as add some boilerplate code to inspect
-the available methods on the service. 
 
 Rails Support
 -------------
 
 ServiceProxy does not have any dependencies on Rails or other frameworks, nor does
-the generator.
+the generator. They both will work with Rails, Sinatra, Merb, or any other Ruby 
+framework.
 
 Ruby 1.9 Support
 ----------------
 
-ServiceProxy supports Ruby 1.9
+ServiceProxy supports Ruby 1.9, JRuby, and any implementation that supports Nokogiri.
 
 USAGE
 -----
