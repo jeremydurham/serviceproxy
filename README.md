@@ -9,9 +9,8 @@ How it Works
 Rails Support
 -------------
 
-ServiceProxy does not have any dependencies on Rails or other frameworks, nor does
-the generator. They both will work with Rails, Sinatra, Merb, or any other Ruby 
-framework.
+ServiceProxy does not have any dependencies on Rails or other frameworks, so it should
+work with any Ruby framework.
 
 Ruby 1.9 Support
 ----------------
