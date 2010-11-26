@@ -1,7 +1,7 @@
 ServiceProxy
 ============
 
-ServiceProxy is a lightweight SOAP library for Ruby. w
+ServiceProxy is a lightweight SOAP library for Ruby. 
 
 How it Works
 ------------
