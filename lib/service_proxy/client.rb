@@ -11,17 +11,16 @@ end
 
 module ServiceProxy
   class Client
-    attr_accessor :service_methods, :soap_actions, :http, :uri, :debug, :wsdl, :target_namespace
+    attr_accessor :soap_actions, :http, :uri, :debug, :wsdl, :namespaces
 
     def initialize(uri)
       self.uri = URI.parse(uri)
-      self.service_methods = []
       self.setup
     end
 
     def call_service(options)
       method   = options[:method]
-      headers  = { 'content-type' => 'text/xml; charset=utf-8', 'SOAPAction' => self.soap_actions[method] }
+      headers  = { 'content-type' => 'text/xml; charset=utf-8' }
       body     = build_request(method, options)
       response = self.http.request_post(self.uri.path, body, headers)
       parse_response(method, response)
@@ -65,21 +64,21 @@ module ServiceProxy
       parser = ServiceProxy::WSDL::Parser.new
       sax_parser = Nokogiri::XML::SAX::Parser.new(parser)
       sax_parser.parse(self.wsdl)
-      raise RuntimeError, "Could not parse WSDL" if parser.service_methods.empty?
-      self.service_methods = parser.service_methods.sort
-      self.target_namespace = parser.target_namespace
+      raise RuntimeError, "Could not parse WSDL" if parser.soap_actions.empty?
+      self.namespaces = parser.namespaces
       self.soap_actions = parser.soap_actions
     end
     
     def generate_methods
-      self.service_methods.each do |service_method|          
-        self.class.send(:define_method, service_method) do |*args|
+      self.soap_actions.keys.each do |soap_action|
+        self.class.send(:define_method, soap_action) do |*args|
           options = args.pop || {}
-          call_service(options.update(:method => service_method))
+          call_service(options.update(:method => soap_action))
         end
       
         self.class.class_eval do
-          alias_method :"#{ServiceProxy::Utils.underscore(service_method)}", "#{service_method}"
+          # alias test_method to testMethod (defined above), to be more Ruby-like
+          alias_method :"#{ServiceProxy::Utils.underscore(soap_action)}", "#{soap_action}"
         end
       end
     end
@@ -94,18 +93,15 @@ module ServiceProxy
       if self.respond_to?(parser)
         self.send(parser, response)
       else
-        response.body
+        Nokogiri.XML(response.body)
       end
     end
   
     def soap_envelope(options, &block)
-      xsd = 'http://www.w3.org/2001/XMLSchema'
-      env = 'http://schemas.xmlsoap.org/soap/envelope/'
-      xsi = 'http://www.w3.org/2001/XMLSchema-instance'
       xml = Builder::XmlMarkup.new
-      xml.env(:Envelope, 'xmlns:xsd' => xsd, 'xmlns:env' => env, 'xmlns:xsi' => xsi) do
+      xml.env(:Envelope, self.namespaces) do
         xml.env(:Body) do
-          xml.__send__(options.delete(:method).to_sym, 'xmlns' => self.target_namespace) do
+          xml.__send__(options.delete(:method).to_sym, 'xmlns' => self.namespaces["xmlns:tns"]) do
             if block_given?
               yield xml
             else
@@ -117,6 +113,6 @@ module ServiceProxy
         end
       end
       xml
-    end      
+    end
   end
 end
