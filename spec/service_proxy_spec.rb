@@ -18,7 +18,7 @@ describe ServiceProxy do
     
     describe "calling an action on a service" do
       before do
-        @proxy = proxy = ServiceProxy::Client.new('http://webservices.daehosting.com/services/isbnservice.wso?WSDL')
+        @proxy = ServiceProxy::Client.new('http://webservices.daehosting.com/services/isbnservice.wso?WSDL')
       end
       
       it "should not raise an error without a build or parse method" do
@@ -70,15 +70,21 @@ describe ServiceProxy do
         @proxy = EbayService.new('http://developer.ebay.com/webservices/latest/eBaySvc.wsdl')
       end
     
-      it "should have methods" do
-        @proxy.service_methods.should_not be_nil
-      end
-    
       it "should be successful" do
         @proxy.GetUser.should_not be_nil
       end
     end
   
+    describe "connecting to the IBAN validate service" do
+      before do
+        @proxy = ServiceProxy::Client.new('http://www.unifiedsoftware.co.uk/freeibanvalidate.wsdl')
+      end
+
+      it "should be successful" do
+        @proxy.call_service(:method => 'urn:ibanvalidate', :params => 'DE47200505501280133503').should == 'VALID'
+      end
+    end
+
     describe "connecting to the Zipcode Service" do
       before do
         @proxy = ZipcodeService.new('http://ws.fraudlabs.com/zipcodeworldUS_webservice.asmx?wsdl')

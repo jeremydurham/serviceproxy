@@ -29,17 +29,6 @@ class SHAGeneratorService < ServiceProxy::Client
   end
 end
 
-class InvalidSHAGeneratorService < ServiceProxy::Client
-  
-  def build_gen_ssha(options)
-    soap_envelope(options) do |xml|
-      xml.text(options[:text])
-      xml.hashtype(options[:hash_type])
-    end
-  end
-  
-end
-
 class EbayService < ServiceProxy::Client
   def build_get_user(options)
     soap_envelope(options) do |xml|
