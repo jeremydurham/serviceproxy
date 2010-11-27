@@ -21,8 +21,8 @@ describe ServiceProxy do
         @proxy = proxy = ServiceProxy::Client.new('http://webservices.daehosting.com/services/isbnservice.wso?WSDL')
       end
       
-      it "should not require build or parse methods" do
-        @proxy.IsValidISBN13(:isbn => '978-0977616633').should == 'true'
+      it "should not raise an error without a build or parse method" do
+        lambda { @proxy.IsValidISBN13(:sISBN => '978-0977616633') }.should_not raise_error
       end
     
       it "should not use method_missing to call the service" do

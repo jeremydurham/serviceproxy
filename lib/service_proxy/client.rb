@@ -78,9 +78,8 @@ module ServiceProxy
           call_service(options.update(:method => service_method))
         end
       
-        self.class.send(:define_method, ServiceProxy::Utils.underscore(service_method)) do |*args|
-          options = args.pop || {}
-          call_service(options.update(:method => service_method))
+        self.class.class_eval do
+          alias_method :"#{ServiceProxy::Utils.underscore(service_method)}", "#{service_method}"
         end
       end
     end
