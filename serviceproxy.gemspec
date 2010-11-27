@@ -18,7 +18,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "nokogiri"
 
-  s.executables = ['wsdl2proxy']
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]  
