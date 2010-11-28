@@ -2,6 +2,8 @@ module ServiceProxy
   module WSDL
     class Parser < Nokogiri::XML::SAX::Document
       attr_accessor :bindings, :services, :namespaces, :operations, :soap_actions
+      
+      attr_accessor :current_operation
 
       def initialize(*args)
         self.operations = []
@@ -23,12 +25,11 @@ module ServiceProxy
             end
           when 'operation'
             if uri == 'http://schemas.xmlsoap.org/wsdl/soap/'
-              self.soap_actions[self.operations.last] = attributes.first.value
+              self.soap_actions[self.current_operation] = attributes.first.value
             else
-              self.operations << attributes.first.value
+              self.current_operation = attributes.first.value
+              self.operations << self.current_operation
             end
-          when 'binding'
-            
         end
       end
     end
