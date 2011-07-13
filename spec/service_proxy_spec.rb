@@ -113,7 +113,7 @@ describe ServiceProxy do
 
       it "should set_debug_output on the HTTP connection" do
         @proxy.http.should_receive(:set_debug_output)
-        @proxy.debug = true
+        @proxy.debug!
       end
     end
   end
