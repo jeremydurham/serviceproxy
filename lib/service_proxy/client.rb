@@ -31,6 +31,10 @@ module ServiceProxy
       self.http.set_debug_output(STDOUT) if value
     end
     
+    def debug!
+      debug = true
+    end
+    
   protected
 
     def setup
